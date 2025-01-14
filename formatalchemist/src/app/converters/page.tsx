@@ -14,24 +14,26 @@ const Converters: React.FC = () => {
 		</ul>
 	);
 	return (
-		<div className="grid grid-cols-6 md:grid-cols-9 gap-1 sm:gap-4 w-full p-10 ">
-			<div className=" max-h-60  col-span-3">
-				<Link href="/fileConverter">
-					<Card
-						image={<FileIcon className="w-full h-full" />}
-						title="File Converter"
-						description={descriptionFileConverter}
-					/>
-				</Link>
-			</div>
-			<div className="max-h-60   md:col-start-5 col-span-3 ">
-				<Link href="/fileConverter">
-					<Card
-						image={<AtSignIcon className="w-full h-full" />}
-						title="Url Converter"
-						description="Convert files"
-					/>
-				</Link>
+		<div className="flex-grow flex ">
+			<div className="grid grid-cols-6 md:grid-cols-9 gap-1 sm:gap-4 w-full p-10 ">
+				<div className=" max-h-60  col-span-3">
+					<Link href="/fileConverter">
+						<Card
+							image={<FileIcon className="w-full h-full" />}
+							title="File Converter"
+							description={descriptionFileConverter}
+						/>
+					</Link>
+				</div>
+				<div className="max-h-60   md:col-start-5 col-span-3 ">
+					<Link href="/fileConverter">
+						<Card
+							image={<AtSignIcon className="w-full h-full" />}
+							title="Url Converter"
+							description="Convert files"
+						/>
+					</Link>
+				</div>
 			</div>
 		</div>
 	);
