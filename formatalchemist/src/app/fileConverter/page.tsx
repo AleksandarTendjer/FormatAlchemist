@@ -3,31 +3,97 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import { Fragment, useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Dropzone from "react-dropzone";
+import Alert from "@mui/material/Alert";
+import {
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	SelectChangeEvent,
+} from "@mui/material";
 
-const steps = ["Upload item", "Choose convert format", "Convert the item"];
+const steps = ["Upload item", "Choose conversion format", "Convert the item"];
 
 const FileConverter: React.FC = () => {
+	const supportedConversions: Record<string, string[]> = {
+		webp: ["jpg", "png"],
+		jpg: ["webp", "png"],
+		png: ["webp", "jpg"],
+		json: ["csv", "google-sheets", "xlsx"],
+		csv: ["json", "google-sheets", "xlsx"],
+		xlsx: ["json", "google-sheets", "csv"],
+		"google-sheets": ["json", "csv", "xlsx"],
+	};
 	const [file, setFile] = useState<File | null>(null);
-	//const [conversionType, setConversionType] = useState<string>("");
-	//const [convertedFile, setConvertedFile] = useState<Blob | null>(null);
-	const [activeStep, setActiveStep] = useState(0);
+	const [possibleConversions, setPossibleConversions] = useState<
+		string[] | null
+	>();
+	const [selectedConversion, setSelectedConversion] = useState<string>("");
+	const [activeStep, setActiveStep] = useState<number>(0);
+	const [alertMessage, setAlertMessage] = useState<string | null>(null);
+	const [downloadFile, setDownloadFile] = useState<Blob | null>(null);
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 
-	const handleReset = () => {
-		setActiveStep(0);
-	};
-	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files && event.target.files[0]) {
-			setFile(event.target.files[0]);
-			handleNext();
+	const handleConvertFile = async () => {
+		const formData = new FormData();
+		if (file) {
+			formData.append("file", file);
+			formData.append("conversionType", selectedConversion);
+			try {
+				const res = await fetch(`/api/convertFile`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: formData,
+				});
+				if (res.ok) {
+					const blob = await res.blob();
+					setDownloadFile(blob);
+				} else {
+					console.error("Conversion failed", await res.json());
+				}
+			} catch {
+				throw new Error("Failed to convert file");
+			}
 		}
 	};
-	console.log(activeStep);
+	const handleFileUpload = (acceptedFiles: File[]) => {
+		if (
+			acceptedFiles &&
+			acceptedFiles[0] &&
+			acceptedFiles[0]?.size > 20971520
+		) {
+			setAlertMessage(
+				"File size exceeds the 20 MB limit. Please upload a smaller file."
+			);
+
+			setTimeout(() => {
+				setAlertMessage(null);
+			}, 5000);
+			return;
+		}
+		const extension = acceptedFiles[0].name
+			.slice(acceptedFiles[0].name.lastIndexOf(".") + 1)
+			.toLowerCase();
+
+		if (!supportedConversions[extension]) {
+			setAlertMessage("Unsopported file type!");
+			setTimeout(() => setAlertMessage(null), 3000);
+			return;
+		}
+		setPossibleConversions(supportedConversions[extension]);
+		setFile(acceptedFiles[0]);
+		console.log(possibleConversions);
+		handleNext();
+	};
+	const handleSelectedConversionChange = (event: SelectChangeEvent) => {
+		if (event.target.value) setSelectedConversion(event.target.value);
+	};
+	const handleBack = () => {
+		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+	};
 	return (
 		<div className="flex items-center justify-center">
 			<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-screen">
@@ -47,38 +113,99 @@ const FileConverter: React.FC = () => {
 				<div className="w-full h-full ">
 					{activeStep === 0 && (
 						<Fragment>
-							<Dropzone onDrop={(acceptedFiles) => console.log(acceptedFiles)}>
+							<Dropzone
+								onDrop={(acceptedFiles) => {
+									handleFileUpload(acceptedFiles);
+									console.log(acceptedFiles);
+								}}>
 								{({ getRootProps, getInputProps }) => (
 									<div
 										{...getRootProps()}
-										className="bg-slate-300 w-full h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
-										<p>
-											Drag and drop <br />
-											or
-											<br /> Click to select from your device device
-										</p>
-										<input
-											type="file"
-											hidden
-											onChange={handleFileUpload}
-											{...getInputProps()}
-										/>
+										className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
+										<p>Drag `n` drop, or Click to select files</p>
+										<input type="file" hidden {...getInputProps()} />
 									</div>
 								)}
 							</Dropzone>
 						</Fragment>
 					)}
-					{activeStep == 1 && file && <Fragment></Fragment>}
-					{activeStep === steps.length && (
+					{activeStep == 1 && file && (
 						<Fragment>
-							<Typography sx={{ mt: 2, mb: 1 }}>
-								All steps completed - you&apos;re finished
-							</Typography>
-							<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-								<Box sx={{ flex: "1 1 auto" }} />
-								<button onClick={handleReset}>Reset</button>
-							</Box>
+							<div className="items-center justify-center h-full w-full flex flex-col">
+								<FormControl className="w-1/2">
+									<InputLabel id="convert-label">Convert type</InputLabel>
+									<Select
+										className="w-full"
+										label="Convert type"
+										value={selectedConversion}
+										onChange={handleSelectedConversionChange}>
+										{possibleConversions &&
+											possibleConversions.map((conversion) => (
+												<MenuItem key={conversion} value={conversion}>
+													{conversion.toUpperCase()}
+												</MenuItem>
+											))}
+									</Select>
+								</FormControl>
+								<div className="flex flex-row justify-evenly mt-10 w-full">
+									<button
+										onClick={handleBack}
+										className=" bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
+										Back
+									</button>
+									<button
+										onClick={() => {
+											handleNext();
+											handleConvertFile();
+										}}
+										className="   bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
+										{activeStep === steps.length - 1 ? "Finish" : "Next"}
+									</button>
+								</div>
+							</div>
 						</Fragment>
+					)}
+					{activeStep === steps.length - 1 && (
+						<Fragment>
+							<div className="items-center justify-center h-full w-full flex flex-col">
+								<div className="w-full flex flex-row">
+									<p>
+										{file?.name
+											? `${file.name.substring(0, file.name.lastIndexOf("."))}.${selectedConversion}`
+											: ""}
+										{downloadFile && (
+											<a
+												href={URL.createObjectURL(downloadFile)}
+												download={downloadFile}
+												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+												Download
+											</a>
+										)}
+									</p>
+									<button className="g-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg"></button>
+								</div>
+								<div className="flex flex-row justify-evenly mt-10 w-full">
+									<button
+										onClick={handleBack}
+										className=" bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
+										Back
+									</button>
+									<button
+										onClick={() => {
+											handleNext();
+											handleConvertFile();
+										}}
+										className="   bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
+										{activeStep === steps.length - 1 ? "Finish" : "Next"}
+									</button>
+								</div>
+							</div>
+						</Fragment>
+					)}
+					{alertMessage && (
+						<Alert severity="error" onClose={() => setAlertMessage(null)}>
+							{alertMessage}
+						</Alert>
 					)}
 				</div>
 			</div>
