@@ -12,6 +12,7 @@ import {
 	Select,
 	SelectChangeEvent,
 } from "@mui/material";
+import { Download } from "lucide-react";
 
 const steps = ["Upload item", "Choose conversion format", "Convert the item"];
 
@@ -33,6 +34,7 @@ const FileConverter: React.FC = () => {
 	const [activeStep, setActiveStep] = useState<number>(0);
 	const [alertMessage, setAlertMessage] = useState<string | null>(null);
 	const [downloadFile, setDownloadFile] = useState<Blob | null>(null);
+
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
@@ -41,11 +43,10 @@ const FileConverter: React.FC = () => {
 		const formData = new FormData();
 		if (file) {
 			formData.append("file", file);
-			formData.append("conversionType", selectedConversion);
+			formData.append("targetType", selectedConversion);
 			try {
 				const res = await fetch(`/api/convertFile`, {
 					method: "POST",
-					headers: { "Content-Type": "application/json" },
 					body: formData,
 				});
 				if (res.ok) {
@@ -59,6 +60,7 @@ const FileConverter: React.FC = () => {
 			}
 		}
 	};
+
 	const handleFileUpload = (acceptedFiles: File[]) => {
 		if (
 			acceptedFiles &&
@@ -74,6 +76,7 @@ const FileConverter: React.FC = () => {
 			}, 5000);
 			return;
 		}
+
 		const extension = acceptedFiles[0].name
 			.slice(acceptedFiles[0].name.lastIndexOf(".") + 1)
 			.toLowerCase();
@@ -88,10 +91,13 @@ const FileConverter: React.FC = () => {
 		console.log(possibleConversions);
 		handleNext();
 	};
+
 	const handleSelectedConversionChange = (event: SelectChangeEvent) => {
 		if (event.target.value) setSelectedConversion(event.target.value);
 	};
+
 	const handleBack = () => {
+		if (activeStep === 2) setDownloadFile(null);
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 	return (
@@ -133,7 +139,7 @@ const FileConverter: React.FC = () => {
 						<Fragment>
 							<div className="items-center justify-center h-full w-full flex flex-col">
 								<FormControl className="w-1/2">
-									<InputLabel id="convert-label">Convert type</InputLabel>
+									<InputLabel id="convert-label">Target type</InputLabel>
 									<Select
 										className="w-full"
 										label="Convert type"
@@ -150,7 +156,7 @@ const FileConverter: React.FC = () => {
 								<div className="flex flex-row justify-evenly mt-10 w-full">
 									<button
 										onClick={handleBack}
-										className=" bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
+										className=" bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
 										Back
 									</button>
 									<button
@@ -158,7 +164,7 @@ const FileConverter: React.FC = () => {
 											handleNext();
 											handleConvertFile();
 										}}
-										className="   bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
+										className="   bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
 										{activeStep === steps.length - 1 ? "Finish" : "Next"}
 									</button>
 								</div>
@@ -168,26 +174,27 @@ const FileConverter: React.FC = () => {
 					{activeStep === steps.length - 1 && (
 						<Fragment>
 							<div className="items-center justify-center h-full w-full flex flex-col">
-								<div className="w-full flex flex-row">
+								<div className="w-1/2 h-1/4 flex flex-col rounded-lg border-2  items-center justify-center">
 									<p>
 										{file?.name
 											? `${file.name.substring(0, file.name.lastIndexOf("."))}.${selectedConversion}`
 											: ""}
-										{downloadFile && (
-											<a
-												href={URL.createObjectURL(downloadFile)}
-												download={downloadFile}
-												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-												Download
-											</a>
-										)}
 									</p>
-									<button className="g-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg"></button>
+
+									{downloadFile && (
+										<a
+											href={URL.createObjectURL(downloadFile)}
+											download={`${file?.name.substring(0, file?.name.lastIndexOf("."))}.${selectedConversion}`}
+											className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 items-center justify-center flex">
+											Download
+											<Download className="pl-2 w-1/2" />
+										</a>
+									)}
 								</div>
 								<div className="flex flex-row justify-evenly mt-10 w-full">
 									<button
 										onClick={handleBack}
-										className=" bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
+										className=" bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
 										Back
 									</button>
 									<button
@@ -195,7 +202,7 @@ const FileConverter: React.FC = () => {
 											handleNext();
 											handleConvertFile();
 										}}
-										className="   bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
+										className="   bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
 										{activeStep === steps.length - 1 ? "Finish" : "Next"}
 									</button>
 								</div>
