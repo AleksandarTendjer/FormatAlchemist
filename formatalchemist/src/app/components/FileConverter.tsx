@@ -1,4 +1,3 @@
-"use client";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -16,16 +15,9 @@ import { Download } from "lucide-react";
 
 const steps = ["Upload item", "Choose conversion format", "Convert the item"];
 
-const FileConverter: React.FC = () => {
-	const supportedConversions: Record<string, string[]> = {
-		webp: ["jpg", "png"],
-		jpg: ["webp", "png"],
-		png: ["webp", "jpg"],
-		json: ["csv", "google-sheets", "xlsx"],
-		csv: ["json", "google-sheets", "xlsx"],
-		xlsx: ["json", "google-sheets", "csv"],
-		"google-sheets": ["json", "csv", "xlsx"],
-	};
+const FileConverter: React.FC = (
+	supportedConversions: Record<string, string[]>
+) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [possibleConversions, setPossibleConversions] = useState<
 		string[] | null
@@ -88,7 +80,6 @@ const FileConverter: React.FC = () => {
 		}
 		setPossibleConversions(supportedConversions[extension]);
 		setFile(acceptedFiles[0]);
-		console.log(possibleConversions);
 		handleNext();
 	};
 
@@ -122,7 +113,6 @@ const FileConverter: React.FC = () => {
 							<Dropzone
 								onDrop={(acceptedFiles) => {
 									handleFileUpload(acceptedFiles);
-									console.log(acceptedFiles);
 								}}>
 								{({ getRootProps, getInputProps }) => (
 									<div

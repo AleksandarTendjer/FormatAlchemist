@@ -1,6 +1,5 @@
 import sharp from "sharp";
 import * as XLSX from "xlsx";
-
 import { NextResponse } from "next/server";
 
 export const config = {
@@ -104,6 +103,7 @@ export async function handleConversion(
 ): Promise<Blob | Buffer> {
 	const dataFormats = ["csv", "json", "google-sheets", "xlsx"];
 	const imageFormats = ["webp", "jpg", "png"];
+	//const audioFormats = ["mp4", "mp3", "wav", "aac", "ogg"];
 
 	if (dataFormats.includes(sourceType) && dataFormats.includes(targetType)) {
 		return await handleDataConversion(file, sourceType, targetType);
@@ -138,7 +138,17 @@ export async function POST(req: Request) {
 	const result = await handleConversion(file, sourceType, targetType);
 
 	const contentType =
-		targetType === "json" ? "application/json" : `image/${targetType}`;
+		targetType === "json"
+			? "application/json"
+			: targetType === "csv"
+				? "text/csv"
+				: targetType === "xlsx"
+					? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+					: ["jpg", "jpeg", "png", "webp"].includes(targetType)
+						? `image/${targetType}`
+						: ["mp3", "wav", "aac", "ogg"].includes(targetType)
+							? `audio/${targetType}`
+							: "application/octet-stream";
 
 	return new NextResponse(result, {
 		headers: {

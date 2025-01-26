@@ -26,7 +26,7 @@ const Card: React.FC<CardProps> = ({
 					<h3 className="text-lg font-bold text-gray-400">{title}</h3>
 				</div>
 				<hr className="border-t border-gray-300 my-2" />
-				<p className="text-sm text-gray-600 mt-3">{description}</p>
+				<div className="text-sm text-gray-600 mt-3">{description}</div>
 			</div>
 		</div>
 	);
