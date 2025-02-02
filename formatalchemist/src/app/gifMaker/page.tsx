@@ -8,34 +8,20 @@ import Dropzone from "react-dropzone";
 import Alert from "@mui/material/Alert";
 import { CircularProgress } from "@mui/material";
 import { Download } from "lucide-react";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { toBlobURL } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import RangeSlider from "../components/RangeSlider";
-//const { FFmpeg } = await import("@ffmpeg/ffmpeg");
-const steps = ["Upload item", "Create gif", "Downloiad the file"];
+import GifGenerator from "../components/GifGenerator";
+
+const steps = ["Upload item", "Create gif", "Download the file"];
 
 const GifMaker: React.FC = () => {
 	const ffmpegRef = useRef<FFmpeg>(null);
-	const videoRef = useRef<HTMLVideoElement | null>(null);
-
-	const [file, setFile] = useState<File | null>(null);
-	const [possibleConversions, setPossibleConversions] = useState<
-		string[] | null
-	>();
+	const [files, setFiles] = useState<File[]>([]);
 	const [activeStep, setActiveStep] = useState<number>(0);
 	const [alertMessage, setAlertMessage] = useState<string | null>(null);
 	const [downloadFile, setDownloadFile] = useState<Blob | null>(null);
-	const [loaded, setLoaded] = useState(false);
-	const messageRef = useRef<HTMLParagraphElement | null>(null);
-	const [from, setFrom] = useState<number>(0); // Start time
-	const [to, setTo] = useState<number>(2.5); // End time
-	const [duration, setDuration] = useState<number>(0);
-	const [metadataLoaded, setMetadataLoaded] = useState(false);
-
-	const supportedConversions: Record<string, string[]> = {
-		avi: ["gif"],
-		mp4: ["gif"],
-	};
+	const [loaded, setLoaded] = useState<boolean>(false);
+	const [isImageUpload, setIsImageUpload] = useState<boolean>(false);
 
 	useEffect(() => {
 		load();
@@ -44,14 +30,9 @@ const GifMaker: React.FC = () => {
 	const load = async () => {
 		const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd";
 		const ffmpeg = new FFmpeg();
-
-		//const ffmpeg = ffmpegRef.current;
-
 		ffmpeg.on("log", ({ message }) => {
-			if (messageRef.current) messageRef.current.innerHTML = message;
+			console.log("FFmpeg log:", message);
 		});
-		// toBlobURL is used to bypass CORS issue, urls with the same
-		// domain can be used directly.
 		await ffmpeg.load({
 			coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
 			wasmURL: await toBlobURL(
@@ -60,93 +41,55 @@ const GifMaker: React.FC = () => {
 			),
 		});
 		ffmpegRef.current = ffmpeg;
-
 		setLoaded(true);
-	};
-	const handleSliderChange = (newFrom: number, newTo: number) => {
-		setFrom(newFrom);
-		setTo(newTo);
-	};
-
-	const handleMakeGif = async () => {
-		if (!ffmpegRef.current) {
-			setAlertMessage("FFmpeg is not loaded yet!");
-			return;
-		}
-		if (!file) {
-			setAlertMessage("No file selected!");
-			setTimeout(() => setAlertMessage(null), 3000);
-			return;
-		}
-		try {
-			const ffmpeg = ffmpegRef.current;
-			const fileName = file.name;
-			const fileExtension = fileName.slice(fileName.lastIndexOf(".") + 1);
-
-			const inputFileName = `input.${fileExtension}`;
-			const outputFileName = "output.gif";
-
-			await ffmpeg.writeFile(`input.${fileExtension}`, await fetchFile(file));
-
-			await ffmpeg.exec([
-				"-i",
-				inputFileName,
-				"-t",
-				(to - from).toString(),
-				"-ss",
-				from.toString(),
-				"-f",
-				"gif",
-				outputFileName,
-			]);
-
-			const fileData = await ffmpeg.readFile(outputFileName);
-
-			const gifBlob = new Blob([fileData], {
-				type: "image/gif",
-			});
-			setDownloadFile(gifBlob);
-
-			handleNext();
-		} catch (error) {
-			console.error("Error creating GIF:", error);
-			setAlertMessage("Failed to create GIF. Please try again.");
-			setTimeout(() => setAlertMessage(null), 5000);
-		}
 	};
 
 	const handleFileUpload = (acceptedFiles: File[]) => {
-		if (
-			acceptedFiles &&
-			acceptedFiles[0] &&
-			acceptedFiles[0]?.size > 20971520
-		) {
-			setAlertMessage(
-				"File size exceeds the 20 MB limit. Please upload a smaller file."
-			);
+		const videoExtensions = ["mp4", "avi"];
+		const imageExtensions = ["png", "jpg"];
+		const imageFiles: File[] = [];
+		let videoFile: File | null = null;
+		let totalImageSize = 0;
 
-			setTimeout(() => {
-				setAlertMessage(null);
-			}, 5000);
-			return;
+		for (const file of acceptedFiles) {
+			const extension = file.name.split(".").pop()?.toLowerCase();
+			if (extension && videoExtensions.includes(extension)) {
+				if (!videoFile) {
+					videoFile = file;
+				}
+			} else if (extension && imageExtensions.includes(extension)) {
+				totalImageSize += file.size;
+				if (totalImageSize <= 20 * 1024 * 1024) {
+					imageFiles.push(file);
+				}
+			}
 		}
-
-		const extension = acceptedFiles[0].name
-			.slice(acceptedFiles[0].name.lastIndexOf(".") + 1)
-			.toLowerCase();
-
-		if (!supportedConversions[extension]) {
-			setAlertMessage("Unsopported file type!");
+		if (videoFile) {
+			setFiles([videoFile]);
+			setIsImageUpload(false);
+		} else if (imageFiles.length > 0) {
+			setFiles(imageFiles);
+			setIsImageUpload(true);
+		} else {
+			setAlertMessage("Unsupported file type!");
 			setTimeout(() => setAlertMessage(null), 3000);
 			return;
 		}
-		setPossibleConversions(supportedConversions[extension]);
-		setFile(acceptedFiles[0]);
+
+		if (totalImageSize > 20971520 || (videoFile && videoFile.size > 20971520)) {
+			setAlertMessage(
+				"File size exceeds the 20 MB limit. Please upload a smaller file."
+			);
+			setTimeout(() => setAlertMessage(null), 5000);
+			return;
+		}
 		handleNext();
 	};
 
 	const handleBack = () => {
-		if (activeStep === 2) setDownloadFile(null);
+		if (activeStep === steps.length - 1) {
+			setDownloadFile(null);
+		}
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
@@ -161,25 +104,17 @@ const GifMaker: React.FC = () => {
 			) : (
 				<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-screen">
 					<Stepper activeStep={activeStep}>
-						{steps.map((label, index) => {
-							const stepProps: { completed?: boolean } = {};
-							const labelProps: {
-								optional?: React.ReactNode;
-							} = {};
-							return (
-								<Step key={index} {...stepProps}>
-									<StepLabel {...labelProps}>{label}</StepLabel>
-								</Step>
-							);
-						})}
+						{steps.map((label, index) => (
+							<Step key={index}>
+								<StepLabel>{label}</StepLabel>
+							</Step>
+						))}
 					</Stepper>
-					<div className="w-full h-full ">
+					<div className="w-full h-full">
 						{activeStep === 0 && (
 							<Fragment>
 								<Dropzone
-									onDrop={(acceptedFiles) => {
-										handleFileUpload(acceptedFiles);
-									}}>
+									onDrop={(acceptedFiles) => handleFileUpload(acceptedFiles)}>
 									{({ getRootProps, getInputProps }) => (
 										<div
 											{...getRootProps({
@@ -194,78 +129,37 @@ const GifMaker: React.FC = () => {
 								</Dropzone>
 							</Fragment>
 						)}
-						{activeStep == 1 && file && (
-							<Fragment>
-								<div className="items-center justify-center h-full w-full flex flex-col">
-									<div className="w-1/2">
-										{file && (
-											<>
-												<video
-													ref={videoRef}
-													className="w-full max-w-lg"
-													src={URL.createObjectURL(file)}
-													onLoadedMetadata={() => {
-														if (!metadataLoaded) {
-															const videoDuration =
-																videoRef.current?.duration || 0;
-															setDuration(videoDuration);
-															setTo(Math.min(2.5, videoDuration));
-															setMetadataLoaded(true);
-														}
-													}}
-												/>
-												<RangeSlider
-													duration={duration}
-													from={from}
-													to={to}
-													onSliderChange={handleSliderChange}
-													key={"timelineKey"}
-												/>
-												<button
-													onClick={handleMakeGif}
-													type="button"
-													className="mt-4 bg-blue-500 text-white p-2 rounded">
-													Create GIF
-												</button>
-											</>
-										)}
-									</div>
-									<div className="flex flex-row justify-evenly mt-10 w-full">
-										<button
-											onClick={handleBack}
-											type="button"
-											className=" bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
-											Back
-										</button>
-										<button
-											onClick={() => {
-												handleNext();
-											}}
-											type="button"
-											className="   bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
-											{activeStep === steps.length - 1 ? "Finish" : "Next"}
-										</button>
-									</div>
-								</div>
-							</Fragment>
+						{activeStep === 1 && (
+							<GifGenerator
+								ffmpeg={ffmpegRef.current}
+								files={files}
+								isImageUpload={isImageUpload}
+								onGifCreated={(gifBlob: Blob) => {
+									setDownloadFile(gifBlob);
+									handleNext();
+								}}
+								onBack={handleBack}
+							/>
 						)}
 						{activeStep === steps.length - 1 && (
 							<Fragment>
 								<div className="items-center justify-center h-full w-full flex flex-col">
-									<div className="w-1/2 h-1/4 flex flex-col rounded-lg border-2  items-center justify-center">
+									<div className="w-1/2 h-1/4 flex flex-col rounded-lg border-2 items-center justify-center">
 										<p>
-											{file?.name
-												? `${file.name.substring(0, file.name.lastIndexOf("."))}.gif`
-												: ""}
+											{!isImageUpload && files[0]?.name
+												? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
+												: "output.gif"}
 										</p>
-
 										{downloadFile && (
 											<a
 												href={URL.createObjectURL(downloadFile)}
-												download={`${file?.name.substring(0, file?.name.lastIndexOf("."))}.gif`}
-												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 items-center justify-center flex">
-												Download
-												<Download className="pl-2 w-1/2" />
+												download={
+													isImageUpload
+														? "output.gif"
+														: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`
+												}
+												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
+												Download <Download className="pl-2 w-1/2" />
 											</a>
 										)}
 									</div>
@@ -273,15 +167,13 @@ const GifMaker: React.FC = () => {
 										<button
 											onClick={handleBack}
 											type="button"
-											className=" bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg ">
+											className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg">
 											Back
 										</button>
 										<button
-											onClick={() => {
-												handleNext();
-											}}
+											onClick={handleNext}
 											type="button"
-											className="   bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4  rounded-lg">
+											className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg">
 											{activeStep === steps.length - 1 ? "Finish" : "Next"}
 										</button>
 									</div>
@@ -299,4 +191,5 @@ const GifMaker: React.FC = () => {
 		</div>
 	);
 };
+
 export default GifMaker;

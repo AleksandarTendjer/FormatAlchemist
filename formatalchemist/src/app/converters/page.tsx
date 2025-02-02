@@ -1,5 +1,5 @@
 import React from "react";
-import { AtSignIcon, FileIcon } from "lucide-react";
+import { FileIcon } from "lucide-react";
 import Link from "next/link";
 import Card from "../components/Card";
 
@@ -7,18 +7,12 @@ const Converters: React.FC = () => {
 	const descriptionPhotoConverter = (
 		<ul className="list-disc pl-5">
 			<li>Png to JPEG, JPEG to WebP (and back 🔂)</li>
-			<li>Excel to CSV, CSV to JSON (and back 🔂)</li>
-			<li>MP4 to MP3 🎶 or WAV to MP3 (and vice versa)</li>
 		</ul>
 	);
-	const descriptionSpreadsheetConverter = (
-		<ul className="list-disc pl-5">
-			<li>Excel to CSV, CSV to JSON (and back 🔂)</li>
-		</ul>
-	);
+
 	const descriptionGifConverter = (
 		<ul className="list-disc pl-5">
-			<li>Create Gifs from video files</li>
+			<li>Create Gifs from video and image files</li>
 		</ul>
 	);
 	return (
@@ -34,15 +28,6 @@ const Converters: React.FC = () => {
 					</Link>
 				</div>
 				<div className=" max-h-60  col-span-3">
-					<Link href="/spreadsheetConverter">
-						<Card
-							image={<FileIcon className="w-full h-full" />}
-							title="Spreadsheet Converter"
-							description={descriptionSpreadsheetConverter}
-						/>
-					</Link>
-				</div>
-				<div className=" max-h-60  col-span-3">
 					<Link href="/gifMaker">
 						<Card
 							image={<FileIcon className="w-full h-full" />}
@@ -51,12 +36,12 @@ const Converters: React.FC = () => {
 						/>
 					</Link>
 				</div>
-				<div className="max-h-60   md:col-start-5 col-span-3 ">
-					<Link href="/fileConverter">
+				<div className=" max-h-60  col-span-3">
+					<Link href="/qrCodeGenerator">
 						<Card
-							image={<AtSignIcon className="w-full h-full" />}
-							title="Url Converter"
-							description="Convert files"
+							image={<FileIcon className="w-full h-full" />}
+							title="QR Code Generator"
+							description={descriptionGifConverter}
 						/>
 					</Link>
 				</div>
