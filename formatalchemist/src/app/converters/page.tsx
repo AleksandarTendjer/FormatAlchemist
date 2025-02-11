@@ -37,7 +37,7 @@ const Converters: React.FC = () => {
 					</Link>
 				</div>
 				<div className=" max-h-60  col-span-3">
-					<Link href="/qrCodeGenerator">
+					<Link href="/qrGenerator">
 						<Card
 							image={<FileIcon className="w-full h-full" />}
 							title="QR Code Generator"

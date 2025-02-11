@@ -3,6 +3,7 @@
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import Alert from "@mui/material/Alert";
@@ -16,6 +17,8 @@ const steps = ["Upload item", "Create gif", "Download the file"];
 
 const GifMaker: React.FC = () => {
 	const ffmpegRef = useRef<FFmpeg>(null);
+	const router = useRouter();
+
 	const [files, setFiles] = useState<File[]>([]);
 	const [activeStep, setActiveStep] = useState<number>(0);
 	const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -86,6 +89,31 @@ const GifMaker: React.FC = () => {
 		handleNext();
 	};
 
+	const uploadGifToDatabase = async (gifBlob: Blob) => {
+		const formData = new FormData();
+		const fileName =
+			!isImageUpload && files[0]?.name
+				? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
+				: "output.gif";
+		formData.append("gif", gifBlob, fileName);
+
+		try {
+			const response = await fetch("/api/uploadGif", {
+				method: "POST",
+				body: formData,
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				router.push(`/qrGenerator?gifUrl=${encodeURIComponent(data.url)}`);
+			} else {
+				console.error("Upload failed with status", response.status);
+			}
+		} catch (error) {
+			console.error("Error uploading GIF:", error);
+		}
+	};
+
 	const handleBack = () => {
 		if (activeStep === steps.length - 1) {
 			setDownloadFile(null);
@@ -144,26 +172,32 @@ const GifMaker: React.FC = () => {
 						{activeStep === steps.length - 1 && (
 							<Fragment>
 								<div className="items-center justify-center h-full w-full flex flex-col">
-									<div className="w-1/2 h-1/4 flex flex-col rounded-lg border-2 items-center justify-center">
+									<div className="w-1/2 h-2/4 flex flex-col rounded-lg border-2 items-center justify-center">
 										<p>
 											{!isImageUpload && files[0]?.name
 												? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
 												: "output.gif"}
 										</p>
 										{downloadFile && (
-											<a
-												href={URL.createObjectURL(downloadFile)}
-												download={
-													isImageUpload
-														? "output.gif"
-														: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`
-												}
-												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
-												Download <Download className="pl-2 w-1/2" />
-											</a>
+											<>
+												<img
+													src={URL.createObjectURL(downloadFile)}
+													className="w-full  max-w-md"
+												/>
+												<a
+													href={URL.createObjectURL(downloadFile)}
+													download={
+														isImageUpload
+															? "output.gif"
+															: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`
+													}
+													className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
+													Download <Download className="pl-2 w-1/2" />
+												</a>
+											</>
 										)}
 									</div>
-									<div className="flex flex-row justify-evenly mt-10 w-full">
+									<div className="flex flex-row justify-evenly mt-14 w-full">
 										<button
 											onClick={handleBack}
 											type="button"
@@ -171,15 +205,23 @@ const GifMaker: React.FC = () => {
 											Back
 										</button>
 										<button
-											onClick={handleNext}
+											onClick={async () => {
+												if (activeStep === steps.length - 1) {
+													if (!downloadFile) return;
+													await uploadGifToDatabase(downloadFile);
+												} else {
+													handleNext();
+												}
+											}}
 											type="button"
 											className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg">
-											{activeStep === steps.length - 1 ? "Finish" : "Next"}
+											QR Codify
 										</button>
 									</div>
 								</div>
 							</Fragment>
 						)}
+
 						{alertMessage && (
 							<Alert severity="error" onClose={() => setAlertMessage(null)}>
 								{alertMessage}
