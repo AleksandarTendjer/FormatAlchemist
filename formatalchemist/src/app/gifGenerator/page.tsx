@@ -138,96 +138,94 @@ const GifMaker: React.FC = () => {
 							</Step>
 						))}
 					</Stepper>
-					<div className="w-full h-full">
-						{activeStep === 0 && (
-							<Fragment>
-								<Dropzone
-									onDrop={(acceptedFiles) => handleFileUpload(acceptedFiles)}>
-									{({ getRootProps, getInputProps }) => (
-										<div
-											{...getRootProps({
-												onClick: (e) => e.preventDefault(),
-												onKeyDown: (e) => e.preventDefault(),
-											})}
-											className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
-											<p>Drag `n` drop, or Click to select files</p>
-											<input type="file" hidden {...getInputProps()} />
-										</div>
-									)}
-								</Dropzone>
-							</Fragment>
-						)}
-						{activeStep === 1 && (
-							<GifGenerator
-								ffmpeg={ffmpegRef.current}
-								files={files}
-								isImageUpload={isImageUpload}
-								onGifCreated={(gifBlob: Blob) => {
-									setDownloadFile(gifBlob);
-									handleNext();
-								}}
-								onBack={handleBack}
-							/>
-						)}
-						{activeStep === steps.length - 1 && (
-							<Fragment>
-								<div className="items-center justify-center h-full w-full flex flex-col">
-									<div className="w-1/2 h-2/4 flex flex-col rounded-lg border-2 items-center justify-center">
-										<p>
-											{!isImageUpload && files[0]?.name
-												? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
-												: "output.gif"}
-										</p>
-										{downloadFile && (
-											<>
-												<img
-													src={URL.createObjectURL(downloadFile)}
-													className="w-full  max-w-md"
-												/>
-												<a
-													href={URL.createObjectURL(downloadFile)}
-													download={
-														isImageUpload
-															? "output.gif"
-															: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`
-													}
-													className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
-													Download <Download className="pl-2 w-1/2" />
-												</a>
-											</>
-										)}
+					{activeStep === 0 && (
+						<Fragment>
+							<Dropzone
+								onDrop={(acceptedFiles) => handleFileUpload(acceptedFiles)}>
+								{({ getRootProps, getInputProps }) => (
+									<div
+										{...getRootProps({
+											onClick: (e) => e.preventDefault(),
+											onKeyDown: (e) => e.preventDefault(),
+										})}
+										className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
+										<p>Drag `n` drop, or Click to select files</p>
+										<input type="file" hidden {...getInputProps()} />
 									</div>
-									<div className="flex flex-row justify-evenly mt-14 w-full">
-										<button
-											onClick={handleBack}
-											type="button"
-											className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg">
-											Back
-										</button>
-										<button
-											onClick={async () => {
-												if (activeStep === steps.length - 1) {
-													if (!downloadFile) return;
-													await uploadGifToDatabase(downloadFile);
-												} else {
-													handleNext();
+								)}
+							</Dropzone>
+						</Fragment>
+					)}
+					{activeStep === 1 && (
+						<GifGenerator
+							ffmpeg={ffmpegRef.current}
+							files={files}
+							isImageUpload={isImageUpload}
+							onGifCreated={(gifBlob: Blob) => {
+								setDownloadFile(gifBlob);
+								handleNext();
+							}}
+							onBack={handleBack}
+						/>
+					)}
+					{activeStep === steps.length - 1 && (
+						<Fragment>
+							<div className="items-center justify-center h-full w-full flex flex-col">
+								<div className="w-1/2 h-2/4 flex flex-col rounded-lg border-2 items-center justify-center">
+									<p>
+										{!isImageUpload && files[0]?.name
+											? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
+											: "output.gif"}
+									</p>
+									{downloadFile && (
+										<>
+											<img
+												src={URL.createObjectURL(downloadFile)}
+												className="w-full  max-w-md"
+											/>
+											<a
+												href={URL.createObjectURL(downloadFile)}
+												download={
+													isImageUpload
+														? "output.gif"
+														: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`
 												}
-											}}
-											type="button"
-											className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:bg-blue-700 p-4 rounded-lg">
-											QR Codify
-										</button>
-									</div>
+												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
+												Download <Download className="pl-2 w-1/2" />
+											</a>
+										</>
+									)}
 								</div>
-							</Fragment>
-						)}
+								<div className="flex flex-row justify-evenly mt-14 w-full">
+									<button
+										onClick={handleBack}
+										type="button"
+										className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500  p-4 rounded-lg">
+										Back
+									</button>
+									<button
+										onClick={async () => {
+											if (activeStep === steps.length - 1) {
+												if (!downloadFile) return;
+												await uploadGifToDatabase(downloadFile);
+											} else {
+												handleNext();
+											}
+										}}
+										type="button"
+										className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
+										QR Codify
+									</button>
+								</div>
+							</div>
+						</Fragment>
+					)}
 
-						{alertMessage && (
-							<Alert severity="error" onClose={() => setAlertMessage(null)}>
-								{alertMessage}
-							</Alert>
-						)}
-					</div>
+					{alertMessage && (
+						<Alert severity="error" onClose={() => setAlertMessage(null)}>
+							{alertMessage}
+						</Alert>
+					)}
 				</div>
 			)}
 		</div>

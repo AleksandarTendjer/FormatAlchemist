@@ -43,20 +43,15 @@ const ItemPage: React.FC<ItemPageProps> = () => {
 
 	return (
 		<div>
-			<div className="relative border-4 border-x-frutigerLightGreen border-y-frutigerLightBlue">
-				<div
-					className="absolute inset-0 m-auto w-[300px] h-[300px] rounded-full bg-gradient-to-r from-frutigerBlue via-frutigerGreen to-frutigerOrange animate-gradient bg-[length:200%_200%]"
-					style={{
-						zIndex: -1,
-					}}></div>
+			<div className="justify-center h-screen w-screen items-center flex">
 				{loading ? (
-					<CircularProgress color="success" className="w-full h-screen" />
+					<CircularProgress color="success" className="w-full h-full" />
 				) : (
 					<img
 						src={`data:image/${item?.fileType};base64,${item?.fileData}`}
 						alt={item?.fileName}
 						style={{ maxWidth: "100%", height: "auto" }}
-						className="w-64 h-64 object-cover  p-10 border-white hover:cursor-grab"
+						className="w-2/3 h-2/3 sm:w-1/2 sm:h-1/2 object-cover p-2 hover:cursor-grab border-4 border-x-frutigerLightGreen border-y-frutigerLightBlue"
 					/>
 				)}
 			</div>

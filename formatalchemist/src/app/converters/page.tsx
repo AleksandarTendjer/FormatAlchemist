@@ -1,49 +1,54 @@
 import React from "react";
-import { FileIcon } from "lucide-react";
-import Link from "next/link";
-import Card from "../components/Card";
+import ConverterCard from "../components/ConverterCard";
+import {
+	ImageIcon,
+	QrCodeIcon,
+	FileImageIcon as FileGifIcon,
+} from "lucide-react";
 
 const Converters: React.FC = () => {
 	const descriptionPhotoConverter = (
-		<ul className="list-disc pl-5">
-			<li>Png to JPEG, JPEG to WebP (and back 🔂)</li>
-		</ul>
+		<p className="list-disc pl-5">Png to JPEG, JPEG to WebP and back </p>
 	);
 
-	const descriptionGifConverter = (
-		<ul className="list-disc pl-5">
-			<li>Create Gifs from video and image files</li>
-		</ul>
+	const descriptionGifgenerator = (
+		<p className="list-disc pl-5">Create Gifs from video and image files</p>
+	);
+	const descriptionQrGenerator = (
+		<p className="list-disc pl-5">Post files and create QR codes for them</p>
 	);
 	return (
-		<div className="flex-grow flex ">
-			<div className="grid grid-cols-6 md:grid-cols-9 gap-1 sm:gap-4 w-full p-10 ">
-				<div className=" max-h-60  col-span-3">
-					<Link href="/photoConverter">
-						<Card
-							image={<FileIcon className="w-full h-full" />}
-							title="File Converter"
-							description={descriptionPhotoConverter}
+		<div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+			<div className="max-w-7xl mx-auto">
+				<h1 className="text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
+					File Conversion Tools
+				</h1>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+					<ConverterCard
+						icon={<ImageIcon className="w-fit h-fit" />}
+						title="Photo Converter"
+						description={descriptionPhotoConverter}
+						link="/photoConverter"
+						color="bg-blue-100 hover:bg-blue-200"
+					/>
+					<div className=" max-h-60 ">
+						<ConverterCard
+							icon={<FileGifIcon className="w-fit h-fit" />}
+							title="Gif Generator"
+							description={descriptionGifgenerator}
+							link="/gifGenerator"
+							color="bg-green-100 hover:bg-green-200"
 						/>
-					</Link>
-				</div>
-				<div className=" max-h-60  col-span-3">
-					<Link href="/gifMaker">
-						<Card
-							image={<FileIcon className="w-full h-full" />}
-							title="Gif maker"
-							description={descriptionGifConverter}
-						/>
-					</Link>
-				</div>
-				<div className=" max-h-60  col-span-3">
-					<Link href="/qrGenerator">
-						<Card
-							image={<FileIcon className="w-full h-full" />}
+					</div>
+					<div className=" max-h-60  ">
+						<ConverterCard
+							icon={<QrCodeIcon className="w-fit h-fit" />}
 							title="QR Code Generator"
-							description={descriptionGifConverter}
+							description={descriptionQrGenerator}
+							link="/qrGenerator"
+							color="bg-purple-100 hover:bg-purple-200"
 						/>
-					</Link>
+					</div>
 				</div>
 			</div>
 		</div>
