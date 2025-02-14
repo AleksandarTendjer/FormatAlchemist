@@ -96,7 +96,7 @@ async function handleImageConversion(
 	return convertedBuffer;
 }
 
-export async function handleConversion(
+async function handleConversion(
 	file: File,
 	sourceType: string,
 	targetType: string
