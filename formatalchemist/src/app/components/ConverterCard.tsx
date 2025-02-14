@@ -4,7 +4,6 @@ interface CardProps {
 	icon: React.ReactNode;
 	title: string;
 	description: React.ReactNode;
-	className?: string;
 	link: string;
 	color?: string;
 }
@@ -13,7 +12,6 @@ const ConverterCard: React.FC<CardProps> = ({
 	icon,
 	title,
 	description,
-	className,
 	link,
 	color,
 }) => {

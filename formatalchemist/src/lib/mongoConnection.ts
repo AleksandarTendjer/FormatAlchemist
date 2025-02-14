@@ -8,7 +8,6 @@ if (!process.env.MONGODB_URI) {
 
 const options: MongoClientOptions = {
 	maxPoolSize: 10,
-	keepAlive: true,
 };
 const client: MongoClient = new MongoClient(uri, options);
 const clientPromise: Promise<MongoClient> = client.connect();
