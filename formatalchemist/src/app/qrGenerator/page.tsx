@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, Suspense, useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { CircularProgress, Step, StepLabel, Stepper } from "@mui/material";
 import Dropzone from "react-dropzone";
@@ -21,7 +21,6 @@ const QrGenerator: React.FC = () => {
 	const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
 	const [activeStep, setActiveStep] = useState<number>(0);
 
-	// If gifUrl is provided in the query, set it immediately.
 	useEffect(() => {
 		if (gifUrl && typeof gifUrl === "string") {
 			setFileUrl(gifUrl);
@@ -124,7 +123,7 @@ const QrGenerator: React.FC = () => {
 					<div className="mb-6 items-center flex flex-col w-full justify-center">
 						<h1 className="mb-2 font-sofiaMedium">Your file</h1>
 						<img
-							src={previewUrl}
+							src={previewUrl || ""}
 							alt="Uploaded file preview"
 							className="w-full max-w-md border mb-4"
 						/>
@@ -166,4 +165,11 @@ const QrGenerator: React.FC = () => {
 	);
 };
 
-export default QrGenerator;
+function QrGeneratorPage() {
+	return (
+		<Suspense fallback={<div>Loading QR Generator...</div>}>
+			<QrGenerator />
+		</Suspense>
+	);
+}
+export default QrGeneratorPage;
