@@ -13,7 +13,7 @@ import { toBlobURL } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import GifGenerator from "../components/GifGenerator";
 
-const steps = ["Upload item", "Create gif", "Download the file"];
+const steps = ["Upload files", "Create gif", "Download the file"];
 
 const GifMaker: React.FC = () => {
 	const ffmpegRef = useRef<FFmpeg>(null);
@@ -128,7 +128,9 @@ const GifMaker: React.FC = () => {
 	return (
 		<div className="flex items-center justify-center">
 			{!loaded ? (
-				<CircularProgress color="success" className="w-full h-screen" />
+				<div className="fixed inset-0 flex items-center justify-center ">
+					<CircularProgress color="success" className="w-12 h-12" />
+				</div>
 			) : (
 				<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-screen">
 					<Stepper activeStep={activeStep}>

@@ -6,12 +6,14 @@ import { QRCodeCanvas } from "qrcode.react";
 import { CircularProgress, Step, StepLabel, Stepper } from "@mui/material";
 import Dropzone from "react-dropzone";
 import { useRouter } from "next/navigation";
+import Alert from "@mui/material/Alert";
 
 type UploadStatus = "idle" | "uploading" | "done";
-const steps = ["Upload item", "Create gif", "Download the file"];
+const steps = ["Upload file", "Review uploaded file", "Review the QR Code"];
 
 const QrGenerator: React.FC = () => {
 	const searchParams = useSearchParams();
+	const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
 	const gifUrl = searchParams.get("gifUrl");
 	const router = useRouter();
@@ -30,6 +32,12 @@ const QrGenerator: React.FC = () => {
 
 	const uploadFile = async (files: File[]) => {
 		const file = files[0];
+		if (file.size > 5000000) {
+			setAlertMessage("Maximum file size is 5 MB!");
+			setTimeout(() => setAlertMessage(null), 3000);
+
+			return;
+		}
 		const localPreviewUrl = URL.createObjectURL(file);
 		setPreviewUrl(localPreviewUrl);
 		setUploadStatus("uploading");
@@ -88,7 +96,7 @@ const QrGenerator: React.FC = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center ">
+		<div className="flex items-center justify-center">
 			<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-screen">
 				<Stepper activeStep={activeStep}>
 					{steps.map((label, index) => (
@@ -99,29 +107,39 @@ const QrGenerator: React.FC = () => {
 				</Stepper>
 				{/* Step 1: File Upload (if fileUrl not already set) */}
 				{activeStep === 0 && uploadStatus === "uploading" && (
-					<CircularProgress color="success" className="w-full h-full" />
+					<div className="fixed inset-0 flex items-center justify-center ">
+						<CircularProgress color="success" className="w-12 h-12" />
+					</div>
 				)}
-				{activeStep === 0 && uploadStatus === "idle" && (
-					<Fragment>
-						<Dropzone onDrop={(acceptedFiles) => uploadFile(acceptedFiles)}>
-							{({ getRootProps, getInputProps }) => (
-								<div
-									{...getRootProps({
-										onClick: (e) => e.preventDefault(),
-										onKeyDown: (e) => e.preventDefault(),
-									})}
-									className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
-									<p>Drag `n` drop, or Click to select files</p>
-									<input type="file" hidden {...getInputProps()} />
-								</div>
+				{activeStep === 0 &&
+					(uploadStatus === "idle" || uploadStatus === "done") && (
+						<Fragment>
+							<Dropzone onDrop={(acceptedFiles) => uploadFile(acceptedFiles)}>
+								{({ getRootProps, getInputProps }) => (
+									<div
+										{...getRootProps({
+											onClick: (e) => e.preventDefault(),
+											onKeyDown: (e) => e.preventDefault(),
+										})}
+										className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
+										<p>Drag `n` drop, or Click to select files</p>
+										<input type="file" hidden {...getInputProps()} />
+									</div>
+								)}
+							</Dropzone>
+							{alertMessage && (
+								<Alert
+									className="my-5"
+									severity="error"
+									onClose={() => setAlertMessage(null)}>
+									{alertMessage}
+								</Alert>
 							)}
-						</Dropzone>
-					</Fragment>
-				)}
+						</Fragment>
+					)}
 				{/* Step 2: Review Uploaded File */}
 				{fileUrl && activeStep === 1 && (
 					<div className="mb-6 items-center flex flex-col w-full justify-center">
-						<h1 className="mb-2 font-sofiaMedium">Your file</h1>
 						<img
 							src={previewUrl || ""}
 							alt="Uploaded file preview"
