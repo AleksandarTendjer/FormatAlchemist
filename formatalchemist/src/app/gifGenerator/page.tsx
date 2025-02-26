@@ -49,7 +49,7 @@ const GifMaker: React.FC = () => {
 
 	const handleFileUpload = (acceptedFiles: File[]) => {
 		const videoExtensions = ["mp4", "avi"];
-		const imageExtensions = ["png", "jpg"];
+		const imageExtensions = ["png", "jpg", "jpeg", "HEIC"];
 		const imageFiles: File[] = [];
 		let videoFile: File | null = null;
 		let totalImageSize = 0;
@@ -74,7 +74,9 @@ const GifMaker: React.FC = () => {
 			setFiles(imageFiles);
 			setIsImageUpload(true);
 		} else {
-			setAlertMessage("Unsupported file type!");
+			setAlertMessage(
+				"Unsupported file type! Must be AVI,MP4,JPG, PNG, JPEG, or HEIC."
+			);
 			setTimeout(() => setAlertMessage(null), 3000);
 			return;
 		}

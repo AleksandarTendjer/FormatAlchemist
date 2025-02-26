@@ -25,7 +25,10 @@ export default function Home() {
 						Unlock the power of seamless conversions. Whether you need a snappy
 						QR code for your business, a quick image conversion for your
 						creative projects, or a fun GIF generator to spice up your social
-						media, our intuitive tools have you covered.
+						media, our intuitive tools have you covered. We support all major
+						vide and image formats for QR codes. For Gif generation we support
+						MP4 and AVI video formats and JPG, PNG, JPEG, and HEIC for image
+						formats.
 					</p>
 					<div className="mt-10 flex items-center justify-center gap-x-6">
 						<Link href="/converters">
