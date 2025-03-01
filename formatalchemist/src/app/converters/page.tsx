@@ -21,7 +21,7 @@ const Converters: React.FC = () => {
 		<p className="list-disc pl-5">Post files and create QR codes for them</p>
 	);
 	return (
-		<div className="min-h-screen py-8 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-y-auto md:overflow-hidden">
+		<div className="min-h-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-7xl mx-auto">
 				<h1 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-6 sm:mb-12 ">
 					Conversion Tools

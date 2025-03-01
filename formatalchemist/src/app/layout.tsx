@@ -34,9 +34,9 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}>
 				<div className="min-h-screen flex flex-col bg-gradient-to-br from-frutigerPaleBlue via-frutigerPaleGreen to-frutigerPaleOrange  font-sofia font-sans">
 					<Navbar links={links} />
-					{children}
+					<main className="flex-1 overflow-y-auto">{children}</main>
 					<footer className="absolute bottom-0 z-10 left-0 right-0 text-center text-xs sm:text-base py-4 bg-transparent text-slate-400 w-full">
-						© 2025{" "}
+						© 2025
 						<a href="https://alextendjer.com" className="underline">
 							Aleksandar Tendjer
 						</a>
