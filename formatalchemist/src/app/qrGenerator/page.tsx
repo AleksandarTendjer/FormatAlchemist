@@ -7,6 +7,7 @@ import { CircularProgress, Step, StepLabel, Stepper } from "@mui/material";
 import Dropzone from "react-dropzone";
 import { useRouter } from "next/navigation";
 import Alert from "@mui/material/Alert";
+import { CirclePlus } from "lucide-react";
 
 type UploadStatus = "idle" | "uploading" | "done";
 const steps = ["Upload file", "Review uploaded file", "Review the QR Code"];
@@ -121,8 +122,11 @@ const QrGenerator: React.FC = () => {
 											onClick: (e) => e.preventDefault(),
 											onKeyDown: (e) => e.preventDefault(),
 										})}
-										className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
-										<p>Drag `n` drop, or Click to select files</p>
+										className="bg-transparent w-full hover:cursor-pointer  h-2/3  sm:m-10 my-4 rounded-lg flex justify-center items-center">
+										<div className="w-1/2 h-1/2 flex flex-col items-center justify-center">
+											<CirclePlus className="w-full h-full" color="#BADEFF" />
+											<p>Add your files here—drag or click</p>
+										</div>{" "}
 										<input type="file" hidden {...getInputProps()} />
 									</div>
 								)}

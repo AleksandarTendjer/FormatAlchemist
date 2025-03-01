@@ -11,7 +11,7 @@ import {
 	Select,
 	SelectChangeEvent,
 } from "@mui/material";
-import { Download } from "lucide-react";
+import { CirclePlus, Download } from "lucide-react";
 
 const steps = ["Upload item", "Choose conversion format", "Convert the item"];
 
@@ -117,8 +117,11 @@ const FileConverter: React.FC = (
 								{({ getRootProps, getInputProps }) => (
 									<div
 										{...getRootProps()}
-										className="bg-slate-200 w-full hover:cursor-pointer border-dashed border-2 h-2/3 shadow-xl sm:m-10 my-4 rounded-lg flex justify-center items-center">
-										<p>Drag `n` drop, or Click to select files</p>
+										className="bg-transparent w-full hover:cursor-pointer  h-2/3  sm:m-10 my-4 rounded-lg flex justify-center items-center">
+										<div className="w-1/2 h-1/2 flex flex-col items-center justify-center">
+											<CirclePlus className="w-full h-full" color="#BADEFF" />
+											<p>Add your files here—drag or click</p>
+										</div>
 										<input type="file" hidden {...getInputProps()} />
 									</div>
 								)}

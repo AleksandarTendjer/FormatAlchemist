@@ -21,37 +21,33 @@ const Converters: React.FC = () => {
 		<p className="list-disc pl-5">Post files and create QR codes for them</p>
 	);
 	return (
-		<div className=" h-screen  py-12 px-4 sm:px-6 lg:px-8 overflow-y-scroll">
+		<div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 ">
 			<div className="max-w-7xl mx-auto">
-				<h1 className="text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12 ">
+				<h1 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-6 sm:mb-12 ">
 					Conversion Tools
 				</h1>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
+				<div className="grid grid-cols-1 md:grid-cols-3  gap-6 md:gap-8 overflow-auto md:overflow-hidden ">
 					<ConverterCard
-						icon={<ImageIcon className="w-fit h-fit" />}
+						icon={<ImageIcon className="w-12 h-12" />}
 						title="Photo Converter"
 						description={descriptionPhotoConverter}
 						link="/photoConverter"
 						color="bg-blue-100 hover:bg-blue-200"
 					/>
-					<div className=" max-h-60 ">
-						<ConverterCard
-							icon={<FileGifIcon className="w-fit h-fit" />}
-							title="Gif Generator"
-							description={descriptionGifgenerator}
-							link="/gifGenerator"
-							color="bg-green-100 hover:bg-green-200"
-						/>
-					</div>
-					<div className=" max-h-60  ">
-						<ConverterCard
-							icon={<QrCodeIcon className="w-fit h-fit" />}
-							title="QR Code Generator"
-							description={descriptionQrGenerator}
-							link="/qrGenerator"
-							color="bg-purple-100 hover:bg-purple-200"
-						/>
-					</div>
+					<ConverterCard
+						icon={<FileGifIcon className="w-12 h-12" />}
+						title="Gif Generator"
+						description={descriptionGifgenerator}
+						link="/gifGenerator"
+						color="bg-green-100 hover:bg-green-200"
+					/>
+					<ConverterCard
+						icon={<QrCodeIcon className="w-12 h-12" />}
+						title="QR Code Generator"
+						description={descriptionQrGenerator}
+						link="/qrGenerator"
+						color="bg-purple-100 hover:bg-purple-200"
+					/>
 				</div>
 			</div>
 		</div>
