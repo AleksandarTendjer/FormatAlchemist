@@ -16,7 +16,7 @@ async function ItemPage({ params }: ItemPageProps) {
 	}
 
 	return (
-		<div className="justify-center h-screen w-screen items-center flex flex-col">
+		<div className="justify-center h-full w-screen items-center flex flex-col">
 			<img
 				src={`data:image/${item.fileType};base64,${item.fileData}`}
 				alt={item.fileName}

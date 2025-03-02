@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { LinkType } from "@/types";
+import type { Viewport } from "next";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -22,6 +23,13 @@ const links: LinkType[] = [
 	{ name: "Home", path: "/" },
 	{ name: "Converters", path: "/converters" },
 ];
+export const viewport: Viewport = {
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 1,
+	userScalable: false,
+	viewportFit: "cover",
+};
 
 export default function RootLayout({
 	children,
@@ -31,11 +39,13 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}>
-				<div className="min-h-screen flex flex-col bg-gradient-to-br from-frutigerPaleBlue via-frutigerPaleGreen to-frutigerPaleOrange  font-sofia font-sans">
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				<div className="min-h-[100dvh]  flex flex-col bg-gradient-to-br from-frutigerPaleBlue via-frutigerPaleGreen to-frutigerPaleOrange  font-sofia font-sans ">
 					<Navbar links={links} />
-					<main className="flex-1 overflow-y-auto">{children}</main>
-					<footer className="absolute bottom-0 z-10 left-0 right-0 text-center text-xs sm:text-base py-4 bg-transparent text-slate-400 w-full">
+					<main className="flex-1 relative overflow-y-auto max-w-[100vw] overflow-x-clip">
+						{children}
+					</main>
+					<footer className=" sticky text-center text-xs sm:text-base py-4 bg-transparent text-slate-400 w-full">
 						© 2025
 						<a href="https://alextendjer.com" className="underline">
 							Aleksandar Tendjer

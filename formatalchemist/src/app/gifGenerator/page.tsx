@@ -128,13 +128,13 @@ const GifMaker: React.FC = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center">
+		<div className="flex items-center justify-center h-full overflow-y-auto">
 			{!loaded ? (
 				<div className="fixed inset-0 flex items-center justify-center ">
 					<CircularProgress color="success" className="w-12 h-12" />
 				</div>
 			) : (
-				<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-screen">
+				<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-full">
 					<Stepper activeStep={activeStep}>
 						{steps.map((label, index) => (
 							<Step key={index}>
@@ -154,7 +154,10 @@ const GifMaker: React.FC = () => {
 										})}
 										className="bg-transparent w-full hover:cursor-pointer  h-2/3  sm:m-10 my-4 rounded-lg flex justify-center items-center">
 										<div className="w-1/2 h-1/2 flex flex-col items-center justify-center">
-											<CirclePlus className="w-full h-full" color="#BADEFF" />
+											<CirclePlus
+												className="w-full h-full sm:max-h-64 sm:max-w-64"
+												color="#BADEFF"
+											/>
 											<p>Add your files here</p>
 										</div>
 										<input type="file" hidden {...getInputProps()} />
