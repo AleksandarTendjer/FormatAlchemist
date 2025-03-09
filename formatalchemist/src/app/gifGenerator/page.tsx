@@ -92,10 +92,13 @@ const GifMaker: React.FC = () => {
 			!isImageUpload && files[0]?.name
 				? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
 				: "output.gif";
-		formData.append("gif", gifBlob, fileName);
+		const file = new File([gifBlob], fileName, {
+			type: gifBlob.type,
+		});
+		formData.append("file", file);
 
 		try {
-			const response = await fetch("/api/uploadGif", {
+			const response = await fetch("/api/items", {
 				method: "POST",
 				body: formData,
 			});
@@ -123,7 +126,7 @@ const GifMaker: React.FC = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center h-full overflow-y-auto">
+		<div className="flex items-center justify-center w-full h-full overflow-y-auto">
 			{!loaded ? (
 				<div className="fixed inset-0 flex items-center justify-center ">
 					<CircularProgress color="success" className="w-12 h-12" />

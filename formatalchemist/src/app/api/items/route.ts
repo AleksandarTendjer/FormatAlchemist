@@ -11,10 +11,17 @@ export async function POST(req: NextRequest) {
 	}
 
 	const formData = await req.formData();
-	const file = formData.get("file") as File;
+	const file = formData.get("file");
 
 	if (!file || !(file instanceof File)) {
 		return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
+	}
+
+	if (file.type !== "image/gif") {
+		return NextResponse.json(
+			{ error: "Only GIF or Image files are allowed" },
+			{ status: 400 }
+		);
 	}
 
 	try {
