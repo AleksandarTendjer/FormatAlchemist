@@ -9,7 +9,6 @@ import Dropzone from "react-dropzone";
 import Alert from "@mui/material/Alert";
 import { CircularProgress } from "@mui/material";
 import { CirclePlus, Download } from "lucide-react";
-import { toBlobURL } from "@ffmpeg/util";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import GifGenerator from "../components/GifGenerator";
 
@@ -31,17 +30,13 @@ const GifMaker: React.FC = () => {
 	}, []);
 
 	const load = async () => {
-		const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd";
 		const ffmpeg = new FFmpeg();
 		ffmpeg.on("log", ({ message }) => {
 			console.log("FFmpeg log:", message);
 		});
 		await ffmpeg.load({
-			coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-			wasmURL: await toBlobURL(
-				`${baseURL}/ffmpeg-core.wasm`,
-				"application/wasm"
-			),
+			coreURL: "/ffmpeg/ffmpeg-core.js",
+			wasmURL: "/ffmpeg/ffmpeg-core.wasm",
 		});
 		ffmpegRef.current = ffmpeg;
 		setLoaded(true);
