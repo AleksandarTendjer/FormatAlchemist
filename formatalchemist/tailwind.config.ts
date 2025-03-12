@@ -9,6 +9,18 @@ export default {
 	],
 	theme: {
 		extend: {
+			animation: {
+				"gradient-flow": "gradient-flow 3s ease infinite",
+			},
+			keyframes: {
+				"gradient-flow": {
+					"0%": { "background-position": "100% 50%" },
+					"100%": { "background-position": "0% 50%" },
+				},
+			},
+			backgroundSize: {
+				"gradient-flow": "200% 100%",
+			},
 			fontFamily: {
 				sofiaRegular: ["Sofia Pro Regular", "sans-serif"],
 				sofiaItalic: ["Sofia Pro Italic", "sans-serif"],

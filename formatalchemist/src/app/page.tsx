@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { BorderTrail } from "../../components/motion-primitives/border-trail";
+import { TextEffect } from "../../components/motion-primitives/text-effect";
 
 export default function Home() {
 	return (
@@ -16,21 +18,37 @@ export default function Home() {
 							"polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
 					}}></div>
 			</div>
-			<div className="relative z-10 mx-auto max-w-2xl py-10 sm:py-48 lg:py-56">
+			<div className="relative z-10 mx-auto max-w-2xl py-10 sm:py-28 lg:py-56">
 				<div className="text-center ">
-					<h1 className="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
+					<TextEffect
+						per="line"
+						as="h1"
+						className="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl"
+						preset="blur">
 						Convert & Create with Ease
-					</h1>
-					<p className="mt-8 text-lg font-medium text-gray-500 sm:text-xl/8">
-						Unlock the power of seamless conversions. Whether you need a snappy
-						QR code for your business, a quick image conversion for your
-						creative projects, or a fun GIF generator to spice up your social
-						media, our intuitive tools have you covered.
-					</p>
+					</TextEffect>
+
+					<div className=" mt-8 text-lg font-medium text-gray-500 sm:text-xl/8">
+						<p>
+							Unlock the power of seamless conversions. Whether you need a
+							snappy QR code for your business, a quick image conversion for
+							your creative projects, or a fun GIF generator to spice up your
+							social media, our intuitive tools have you covered.
+						</p>
+					</div>
 					<div className="mt-10 flex items-center justify-center gap-x-6">
 						<Link href="/converters">
-							<div className="rounded-md bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500  p-2  px-3.5 py-2.5 text-sm font-semibold  shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-								Start Creating Now
+							<div className="relative">
+								<BorderTrail
+									style={{
+										boxShadow:
+											"0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
+									}}
+									size={2}
+								/>
+								<div className="relative z-10 rounded-md bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500 p-2 px-3.5 py-2.5 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+									Start Creating Now
+								</div>
 							</div>
 						</Link>
 					</div>

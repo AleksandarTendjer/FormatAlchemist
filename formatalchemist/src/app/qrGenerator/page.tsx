@@ -146,7 +146,7 @@ const QrGenerator: React.FC = () => {
 					)}
 				{/* Step 2: Review Uploaded File */}
 				{fileUrl && activeStep === 1 && (
-					<div className="mb-6 items-center flex flex-col w-full justify-center">
+					<div className="mb-6 sm:mt-4 items-center flex flex-col w-full justify-center">
 						<img
 							src={previewUrl || ""}
 							alt="Uploaded file preview"
@@ -157,14 +157,15 @@ const QrGenerator: React.FC = () => {
 
 				{/* Step 3: Generate QR Code */}
 				{fileUrl && activeStep === steps.length - 1 && (
-					<div className="flex flex-col items-center p-10">
-						<p className="mb-4">Scan this QR code to view your file:</p>
+					<div className="relative group inline-block cursor-pointer juftify-center items-center p-10">
 						<QRCodeCanvas id="qr-code" value={fileUrl} size={256} />
-						<button
-							onClick={() => downloadImage("png")}
-							className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-							Download QR Code SVG
-						</button>
+						<div
+							className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg"
+							onClick={() => downloadImage("png")}>
+							<span className="text-white text-lg font-medium">
+								Click to Download
+							</span>
+						</div>
 					</div>
 				)}
 				{activeStep !== 0 && (
@@ -172,13 +173,15 @@ const QrGenerator: React.FC = () => {
 						<button
 							onClick={handleBack}
 							type="button"
-							className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500  p-4 rounded-lg">
+							className="bg-[length:200%_100%] 
+             animate-gradient-flow bg-gradient-to-br from-slate-200 via-slate-500 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
 							Back
 						</button>
 						<button
 							onClick={handleNext}
 							type="button"
-							className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500  p-4 rounded-lg">
+							className="  bg-[length:200%_100%] 
+             animate-gradient-flow bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500  p-4 rounded-lg">
 							{fileUrl && activeStep === steps.length - 1
 								? "View File"
 								: "QR Codify"}

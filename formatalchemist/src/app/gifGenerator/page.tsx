@@ -8,7 +8,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import Alert from "@mui/material/Alert";
 import { CircularProgress } from "@mui/material";
-import { CirclePlus, Download } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import GifGenerator from "../components/GifGenerator";
 
@@ -180,35 +180,37 @@ const GifMaker: React.FC = () => {
 						<Fragment>
 							<div className="items-center justify-center h-full w-full flex flex-col">
 								<div className="w-1/2 h-2/4 flex flex-col rounded-lg border-2 items-center justify-center">
-									<p>
-										{!isImageUpload && files[0]?.name
-											? `${files[0].name.substring(0, files[0].name.lastIndexOf("."))}.gif`
-											: "output.gif"}
-									</p>
 									{downloadFile && (
-										<>
+										<div className="relative group inline-block cursor-pointer">
 											<img
 												src={URL.createObjectURL(downloadFile)}
-												className="w-full  max-w-md"
+												className="w-full  max-w-md cursor-grab"
 											/>
-											<a
-												href={URL.createObjectURL(downloadFile)}
-												download={
-													isImageUpload
+											<div
+												className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg"
+												onClick={() => {
+													const link = document.createElement("a");
+													link.href = URL.createObjectURL(downloadFile);
+													link.download = isImageUpload
 														? "output.gif"
-														: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`
-												}
-												className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
-												Download <Download className="pl-2 w-1/2" />
-											</a>
-										</>
+														: `${files[0]?.name.substring(0, files[0]?.name.lastIndexOf("."))}.gif`;
+													document.body.appendChild(link);
+													link.click();
+													document.body.removeChild(link);
+												}}>
+												<span className="text-white text-lg font-medium">
+													Click to Download
+												</span>
+											</div>
+										</div>
 									)}
 								</div>
 								<div className="flex flex-row justify-evenly mt-14 w-full">
 									<button
 										onClick={handleBack}
 										type="button"
-										className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500  p-4 rounded-lg">
+										className="bg-[length:200%_100%] 
+             animate-gradient-flow bg-gradient-to-br from-slate-200 via-slate-500 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
 										Back
 									</button>
 									<button
@@ -221,7 +223,8 @@ const GifMaker: React.FC = () => {
 											}
 										}}
 										type="button"
-										className="bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
+										className="  bg-[length:200%_100%] 
+             animate-gradient-flow bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
 										QR Codify
 									</button>
 								</div>

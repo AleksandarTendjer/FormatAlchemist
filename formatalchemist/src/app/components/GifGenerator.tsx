@@ -3,6 +3,13 @@ import { fetchFile } from "@ffmpeg/util";
 import RangeSlider from "./RangeSlider";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { Checkbox } from "@mui/material";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "../../../components/motion-primitives/accordion";
+import { ChevronUp } from "lucide-react";
 
 interface GifGeneratorProps {
 	ffmpeg: FFmpeg | null;
@@ -124,72 +131,85 @@ const GifGenerator: React.FC<GifGeneratorProps> = ({
 							/>
 						))}
 					</div>
-					<div className="mt-4">
-						<h3 className="text-lg font-bold">Frame Range</h3>
-						<div className="flex space-x-4">
-							<label>
-								From:{" "}
-								<input
-									type="number"
-									value={frameFrom}
-									onChange={(e) => setFrameFrom(Number(e.target.value))}
-									min={1}
-									className="border rounded px-1"
-								/>
-							</label>
-							<label>
-								To:{" "}
-								<input
-									type="number"
-									value={frameTo}
-									onChange={(e) => setFrameTo(Number(e.target.value))}
-									min={frameFrom}
-									max={files.length}
-									className="border rounded px-1"
-								/>
-							</label>
-						</div>
-					</div>
-					<div className="mt-4">
-						<label>
-							Delay time in miliseconds
-							<input
-								type="number"
-								value={delayTime}
-								onChange={(e) => setDelayTime(Number(e.target.value))}
-								className="border rounded px-1"
-							/>
-						</label>
-					</div>
-					<div className="mt-4">
-						<label>
-							Gravity:{" "}
-							<select
-								value={gravity}
-								onChange={(e) => setGravity(e.target.value)}
-								className="border rounded px-1">
-								<option value="top_left">Top Left</option>
-								<option value="top_center">Top Center</option>
-								<option value="top_right">Top Right</option>
-								<option value="center_left">Center Left</option>
-								<option value="center">Center</option>
-								<option value="center_right">Center Right</option>
-								<option value="bottom_left">Bottom Left</option>
-								<option value="bottom_center">Bottom Center</option>
-								<option value="bottom_right">Bottom Right</option>
-							</select>
-						</label>
-					</div>
-					<div className="mt-4">
-						<label className="flex items-center">
-							<Checkbox
-								checked={useGlobalColormap}
-								onChange={(e) => setUseGlobalColormap(e.target.checked)}
-								className="mr-2"
-							/>
-							Use global colormap
-						</label>
-					</div>
+					<Accordion
+						className="flex w-full flex-col divide-y divide-zinc-700 "
+						transition={{ duration: 0.2, ease: "easeInOut" }}>
+						<AccordionItem value="getting-started" className="py-2">
+							<AccordionTrigger className="w-full text-center text-zinc-950 dark:text-zinc-50">
+								<div className="flex items-center justify-between text-2xl ">
+									<div>Options</div>
+									<ChevronUp className="h-4 w-4 text-zinc-950 transition-transform duration-200 group-data-expanded:-rotate-180 dark:text-zinc-50" />
+								</div>
+							</AccordionTrigger>
+							<AccordionContent>
+								<div className="mt-4">
+									<div className="flex space-x-2 justify-between">
+										<label>
+											From Frame:{" "}
+											<input
+												type="number"
+												value={frameFrom}
+												onChange={(e) => setFrameFrom(Number(e.target.value))}
+												min={1}
+												className="border rounded px-1"
+											/>
+										</label>
+										<label>
+											To Frame:{" "}
+											<input
+												type="number"
+												value={frameTo}
+												onChange={(e) => setFrameTo(Number(e.target.value))}
+												min={frameFrom}
+												max={files.length}
+												className="border rounded px-1"
+											/>
+										</label>
+									</div>
+								</div>
+								<div className="mt-4">
+									<label>
+										Delay time in miliseconds
+										<input
+											type="number"
+											value={delayTime}
+											onChange={(e) => setDelayTime(Number(e.target.value))}
+											className="border rounded px-1"
+										/>
+									</label>
+								</div>
+								<div className="mt-4">
+									<label>
+										Gravity:{" "}
+										<select
+											value={gravity}
+											onChange={(e) => setGravity(e.target.value)}
+											className="border rounded px-1">
+											<option value="top_left">Top Left</option>
+											<option value="top_center">Top Center</option>
+											<option value="top_right">Top Right</option>
+											<option value="center_left">Center Left</option>
+											<option value="center">Center</option>
+											<option value="center_right">Center Right</option>
+											<option value="bottom_left">Bottom Left</option>
+											<option value="bottom_center">Bottom Center</option>
+											<option value="bottom_right">Bottom Right</option>
+										</select>
+									</label>
+								</div>
+								<div className="mt-4">
+									<label className="flex items-center">
+										<Checkbox
+											checked={useGlobalColormap}
+											onChange={(e) => setUseGlobalColormap(e.target.checked)}
+											className="mr-2"
+										/>
+										Use global colormap
+									</label>
+								</div>
+							</AccordionContent>
+						</AccordionItem>
+					</Accordion>
 				</>
 			) : (
 				<>
@@ -215,13 +235,17 @@ const GifGenerator: React.FC<GifGeneratorProps> = ({
 					/>
 				</>
 			)}
-			<div className="mt-6 flex space-x-4">
-				<button onClick={onBack} className="bg-gray-300 p-2 rounded">
+			<div className="mt-6 flex space-x-4 sm:w-full sm:justify-evenly">
+				<button
+					onClick={onBack}
+					className="bg-[length:200%_100%] 
+             animate-gradient-flow bg-gradient-to-br from-slate-200 via-slate-500 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
 					Back
 				</button>
 				<button
 					onClick={createGif}
-					className="bg-blue-500 text-white p-2 rounded">
+					className="bg-[length:200%_100%] 
+             animate-gradient-flow bg-gradient-to-br from-slate-200 via-blue-400 to-slate-200 text-slate-100 hover:via-blue-500 p-4 rounded-lg">
 					Create GIF
 				</button>
 			</div>
