@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	description:
 		"Online file converter & creator: Generate QR codes, convert images (JPG/PNG/HEIC), create GIFs from videos. Fast, secure, and free web-based tools.",
 	icons: {
-		icon: "/assets/imgs/wizzard.png",
+		icon: "/assets/imgs/home.png",
 	},
 };
 const links: LinkType[] = [
