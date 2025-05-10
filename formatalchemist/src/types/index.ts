@@ -5,7 +5,5 @@ export type LinkType = {
 	path: string;
 };
 export interface ItemData extends WithId<Document> {
-	fileName: string;
-	fileType: string; // e.g., "png" or "jpeg"
-	fileData: string; // base64-encoded file data
+	url: string;
 }

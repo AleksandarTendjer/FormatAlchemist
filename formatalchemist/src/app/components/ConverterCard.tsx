@@ -21,10 +21,12 @@ const ConverterCard: React.FC<CardProps> = ({
 				className={`${color} cursor-pointer p-1 shadow-lg border-2 rounded-lg`}>
 				<div className="mt-2 text-gray-700 dark:text-gray-300 mx-2">
 					<div className="flex items-center justify-between">
-						<div className="text-2xl font-bold">{title}</div>
+						<div className="text-2xl font-bold font-RastamanOblique">
+							{title}
+						</div>
 						{icon}
 					</div>
-					<div className="my-2">{description}</div>
+					<div className="my-2 font-TypelightSans">{description}</div>
 				</div>
 			</div>
 		</Link>

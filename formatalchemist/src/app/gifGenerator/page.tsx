@@ -11,6 +11,7 @@ import { CircularProgress } from "@mui/material";
 import { CirclePlus } from "lucide-react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import GifGenerator from "../components/GifGenerator";
+import Container from "../components/Container";
 
 const steps = ["Upload files", "Create gif", "Download the file"];
 
@@ -126,13 +127,13 @@ const GifMaker: React.FC = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center w-full h-full overflow-y-auto">
+		<div className="flex items-center justify-center w-full h-full overflow-y-auto py-5">
 			{!loaded ? (
 				<div className="fixed inset-0 flex items-center justify-center ">
 					<CircularProgress color="success" className="w-12 h-12" />
 				</div>
 			) : (
-				<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-full">
+				<Container className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-full">
 					<Stepper activeStep={activeStep}>
 						{steps.map((label, index) => (
 							<Step key={index}>
@@ -178,7 +179,7 @@ const GifMaker: React.FC = () => {
 					)}
 					{activeStep === steps.length - 1 && (
 						<Fragment>
-							<div className="items-center justify-center h-full w-full flex flex-col">
+							<div className="items-center justify-center h-full w-full flex flex-col ">
 								<div className="w-1/2 h-2/4 flex flex-col rounded-lg border-2 items-center justify-center">
 									{downloadFile && (
 										<div className="relative group inline-block cursor-pointer">
@@ -237,7 +238,7 @@ const GifMaker: React.FC = () => {
 							{alertMessage}
 						</Alert>
 					)}
-				</div>
+				</Container>
 			)}
 		</div>
 	);

@@ -8,6 +8,7 @@ import Dropzone from "react-dropzone";
 import { useRouter } from "next/navigation";
 import Alert from "@mui/material/Alert";
 import { CirclePlus } from "lucide-react";
+import Container from "../components/Container";
 
 type UploadStatus = "idle" | "uploading" | "done";
 const steps = ["Upload file", "Review uploaded file", "Review the QR Code"];
@@ -74,7 +75,7 @@ const QrGenerator: React.FC = () => {
 
 	const handleNext = () => {
 		if (fileUrl && activeStep === steps.length - 1) {
-			router.push(fileUrl);
+			router.push(`items/${fileUrl}`);
 		} else {
 			setActiveStep((prevActiveStep) => prevActiveStep + 1);
 		}
@@ -97,8 +98,8 @@ const QrGenerator: React.FC = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center w-full h-full overflow-y-auto">
-			<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-full">
+		<div className="flex items-center justify-center w-full h-full overflow-y-auto py-5">
+			<Container className="flex flex-col sm:py-10 w-full md:w-2/3 mx-2 h-full ">
 				<Stepper activeStep={activeStep}>
 					{steps.map((label, index) => (
 						<Step key={index}>
@@ -188,7 +189,7 @@ const QrGenerator: React.FC = () => {
 						</button>
 					</div>
 				)}
-			</div>
+			</Container>
 		</div>
 	);
 };

@@ -10,11 +10,11 @@ const Navbar: React.FC<NavbarProps> = ({ links }) => {
 	const [activeLink, setActiveLink] = useState<string | null>(null);
 
 	return (
-		<div className="w-full bg-gradient-to-br from-slate-200 via-blue-300 to-slate-200 p-2">
-			<nav className="flex justify-center items-center space-x-8 py-4  font-semibold leading-[0.8] uppercase border-opacity-40 border-white ">
+		<div className="w-full bg-gradient-to-br from-slate-200 via-slate-400 to-slate-200 p-2 font-Shift80Kn">
+			<nav className="flex justify-center items-center space-x-8 h-full  font-semibold leading-[0.8] uppercase border-opacity-40 border-white  ">
 				<AnimatedBackground
 					enableHover
-					className="bg-white/50 rounded-lg backdrop-blur-sm"
+					className="bg-white/50 rounded-lg "
 					transition={{ duration: 0.2, type: "tween" }}>
 					{links.map((link) => (
 						<Link
@@ -22,12 +22,12 @@ const Navbar: React.FC<NavbarProps> = ({ links }) => {
 							key={link.name}
 							data-id={link.name}
 							onClick={() => setActiveLink(link.name)}
-							className="px-4 py-2 mx-2 relative inline-flex transition-colors duration-200">
+							className="px-4  mx-2 relative inline-flex transition-colors text-xl text-slate-100/70 duration-200">
 							{activeLink === link.name && (
 								<img
 									src="/assets/imgs/coolOrb.png"
 									alt="Active indicator"
-									className="absolute -left-4 -top-1 w-10 h-10 transition-transform duration-300"
+									className="absolute -left-4 -top-2 w-10 h-10 transition-transform duration-300"
 								/>
 							)}
 							{link.name}

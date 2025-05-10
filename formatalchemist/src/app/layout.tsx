@@ -44,9 +44,11 @@ export default function RootLayout({
 		<html lang="en">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<div className="min-h-[100dvh]  flex flex-col bg-gradient-to-br from-frutigerPaleBlue via-frutigerPaleGreen to-frutigerPaleOrange  font-sofia font-sans ">
+				<div className="min-h-[100dvh]  flex flex-col bg-[url(/assets/imgs/layoutBackground.gif)]  font-RoSpritendo  ">
 					<Navbar links={links} />
-					<main className="flex-1 relative overflow-y-auto max-w-[100vw] overflow-x-clip">
+					<main
+						className="flex-1 relative overflow-y-auto max-w-[100vw] overflow-x-clip"
+						id="mainContent">
 						{children}
 					</main>
 					<footer className=" sticky text-center text-xs sm:text-base py-4 bg-transparent text-slate-400 w-full">

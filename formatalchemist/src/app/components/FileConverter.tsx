@@ -13,6 +13,7 @@ import {
 	SelectChangeEvent,
 } from "@mui/material";
 import { CirclePlus, Download } from "lucide-react";
+import Container from "./Container";
 
 const steps = ["Upload item", "Choose conversion format", "Convert the item"];
 
@@ -99,7 +100,7 @@ const FileConverter: React.FC = (
 	};
 	return (
 		<div className="flex items-center justify-center w-full h-full overflow-y-auto">
-			<div className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-full">
+			<Container className="flex flex-col py-10 w-full md:w-2/3 mx-2 h-full">
 				<Stepper activeStep={activeStep}>
 					{steps.map((label, index) => {
 						const stepProps: { completed?: boolean } = {};
@@ -206,7 +207,7 @@ const FileConverter: React.FC = (
 						</Alert>
 					)}
 				</div>
-			</div>
+			</Container>
 		</div>
 	);
 };

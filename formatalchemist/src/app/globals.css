@@ -2,14 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-	font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
 	:root {
 		--radius: 0.5rem;
 	}
+}
+
+@font-face {
+	font-family: "Spritendo";
+	src:
+		url("/assets/fonts/RoSpritendoSemiboldBeta.woff2") format("woff2"),
+		url("/assets/fonts/RoSpritendoSemiboldBeta.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "TypelightSans";
+	src:
+		url("/assets/fonts/TypelightSans.woff2") format("woff2"),
+		url("/assets/fonts/TypelightSans.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Shift-80Kn";
+	src:
+		url("/assets/fonts/Shift-8OKn.woff2") format("woff2"),
+		url("/assets/fonts/Shift-8OKn.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Rastamanoblique";
+	src:
+		url("/assets/fonts/Rastamanoblique-xner.woff2") format("woff2"),
+		url("/assets/fonts/Rastamanoblique-xner.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
 }
 
 .App canvas {
