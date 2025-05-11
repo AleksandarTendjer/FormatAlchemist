@@ -1,7 +1,6 @@
 import sharp from "sharp";
 import { NextResponse } from "next/server";
 import { Buffer } from "buffer";
-import ttf2woff2 from "ttf2woff2";
 export const config = {
 	api: {
 		bodyParser: false,
@@ -97,38 +96,6 @@ async function handleImageConversion(
 
 	return convertedBuffer;
 }
-async function handleFontFormatConversion(
-	file: File,
-	sourceType: string
-): Promise<Buffer> {
-	const arrayBuffer = await file.arrayBuffer();
-	const sourceFontBuffer = Buffer.from(arrayBuffer);
-	let targetBuffer: Buffer = sourceFontBuffer;
-
-	if (sourceType != "svg") {
-		targetBuffer = ttf2woff2(sourceFontBuffer);
-	} else {
-		/*const { url: svgUrl } = await put(file.name, file, {
-			access: "public",
-			token: process.env.BLOB_READ_WRITE_TOKEN,
-		});
-		const svgContent = sourceFontBuffer.toString("utf-8");
-		const options = {
-			fontName: "ttfFont", // Required font family name
-			startUnicode: 0xe000, // Starting Unicode point
-			svg2ttf: {
-				// TTF generation options
-				ts: Math.round(Date.now() / 1000), // Timestamp
-				version: "1.0", // Font version
-			},
-			log: false, // Disable logging if not needed
-		};
-		createSVG()
-		const ttfBuffer = await createTTF(svgContent, options);
-		await del(svgUrl);*/
-	}
-	return targetBuffer;
-}
 
 async function handleConversion(
 	file: File,
@@ -137,7 +104,6 @@ async function handleConversion(
 ): Promise<Blob | Buffer> {
 	//const dataFormats = ["csv", "json", "google-sheets", "xlsx"];
 	const imageFormats = ["webp", "jpg", "png"];
-	const fontFormats = ["otf", "ttf", "woff", "woff2"];
 	//const audioFormats = ["mp4", "mp3", "wav", "aac", "ogg"];
 
 	/*if (dataFormats.includes(sourceType) && dataFormats.includes(targetType)) {
@@ -145,11 +111,6 @@ async function handleConversion(
 	} else*/
 	if (imageFormats.includes(sourceType) && imageFormats.includes(targetType)) {
 		return await handleImageConversion(file, targetType);
-	} else if (
-		fontFormats.includes(sourceType) &&
-		fontFormats.includes(targetType)
-	) {
-		return await handleFontFormatConversion(file, sourceType);
 	} else {
 		throw new Error(
 			`Conversion from ${sourceType} to ${targetType} is not supported`

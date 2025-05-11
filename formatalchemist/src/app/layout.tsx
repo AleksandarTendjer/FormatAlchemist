@@ -51,13 +51,6 @@ export default function RootLayout({
 						id="mainContent">
 						{children}
 					</main>
-					<footer className=" sticky text-center text-xs sm:text-base py-4 bg-transparent text-slate-400 w-full">
-						© 2025
-						<a href="https://alextendjer.com" className="underline">
-							Aleksandar Tendjer
-						</a>
-						. All rights reserved.
-					</footer>
 				</div>
 			</body>
 		</html>

@@ -12,16 +12,15 @@ const Converters: React.FC = () => {
 		<p className="list-disc pl-5">Png to JPEG, JPEG to WebP and back </p>
 	);
 
-	const descriptionFontFormatConverter = (
-		<p className="list-disc pl-5">
-			Create ttf font from an svg. Convert ttf to woff2 font format.
-		</p>
-	);
-
 	const descriptionGifgenerator = (
 		<p className="list-disc pl-5">
 			Create Gifs from video and image files. MP4 and AVI video formats and JPG,
 			PNG, JPEG, and HEIC for image formats supported.
+		</p>
+	);
+	const descriptionImage2Soundgenerator = (
+		<p className="list-disc pl-5">
+			Generate audio from image types like gif,jpg,png and others.
 		</p>
 	);
 	const descriptionQrGenerator = (
@@ -56,9 +55,9 @@ const Converters: React.FC = () => {
 				/>
 				<ConverterCard
 					icon={<Type className="w-12 h-12" />}
-					title="Font format converter"
-					description={descriptionFontFormatConverter}
-					link="/fontFormatConverter"
+					title="Image to sound converter"
+					description={descriptionImage2Soundgenerator}
+					link="/image2SoundConverter"
 					color="bg-yellow-100 hover:bg-yellow-200"
 				/>
 			</div>
