@@ -22,11 +22,12 @@ async function ItemPage({ params }: ItemPageProps) {
 		<div className="justify-center h-full w-screen items-center flex flex-col">
 			<Image
 				src={item.url || "/assets/imgs/notFound.png"}
-				quality={100}
+				quality={80}
 				width={100}
 				height={100}
 				alt="item image"
 				style={{ maxWidth: "100%", height: "auto" }}
+				priority={true}
 				className="w-2/3 h-2/3 sm:w-1/2 sm:h-1/2 object-cover p-2 hover:cursor-grab border-4 border-x-frutigerLightGreen border-y-frutigerLightBlue"
 			/>
 			<QrCodePopup />
