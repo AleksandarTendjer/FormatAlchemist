@@ -14,12 +14,14 @@ export default function Home() {
 				alt="background image"
 				className="w-full h-full z-1 absolute"
 			/>
-			<div className="flex flex-col justify-center items-center w-full h-full z-10 relative">
-				<TextLoop className="font-Shift80Kn text-3xl text-gray-200">
-					<span>Create</span>
-					<span>Convert</span>
-					<span>Have fun</span>
-				</TextLoop>
+			<div className="flex flex-col justify-center items-center w-full h-full z-10 relative  ">
+				<div className="bg-[url('/assets/imgs/frameHomeText.png')] h-80 w-80 bg-no-repeat bg-center bg-contain items-center flex justify-center ">
+					<TextLoop className="font-Shift80Kn text-3xl text-gray-200 ">
+						<span>Create</span>
+						<span>Convert</span>
+						<span>Have fun</span>
+					</TextLoop>
+				</div>
 			</div>
 		</div>
 	);

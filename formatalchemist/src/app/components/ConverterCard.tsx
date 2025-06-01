@@ -13,20 +13,21 @@ const ConverterCard: React.FC<CardProps> = ({
 	title,
 	description,
 	link,
-	color,
 }) => {
 	return (
 		<Link href={link}>
 			<div
-				className={`${color} cursor-pointer p-1 shadow-lg border-2 rounded-lg`}>
-				<div className="mt-2 text-gray-700 dark:text-gray-300 mx-2">
+				className={`bg-[url('/assets/imgs/frameConverters1.png')] bg-no-repeat bg-center bg-cover cursor-pointer p-1 shadow-lg  rounded-lg h-full w-full hover:text-gray-500 text-gray-300`}>
+				<div className="m-1 max-h-3/5 max-w-4/5   ">
 					<div className="flex items-center justify-between">
-						<div className="text-2xl font-bold font-RastamanOblique">
+						<div className=" text-md sm:text-xl font-bold font-RastamanOblique">
 							{title}
 						</div>
 						{icon}
 					</div>
-					<div className="my-2 font-TypelightSans">{description}</div>
+					<div className="my-2 text-xs sm:text-md font-TypelightSans">
+						{description}
+					</div>
 				</div>
 			</div>
 		</Link>

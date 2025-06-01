@@ -45,7 +45,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<div className="sm:min-h-[100dvh]  flex flex-col bg-[url(/assets/imgs/layoutBackground.gif)]  font-RoSpritendo  ">
+				<div className="min-h-[100dvh]  flex flex-col bg-[url(/assets/imgs/layoutBackground.gif)]  font-RoSpritendo  ">
 					<Navbar links={links} />
 					<main
 						className="flex-1 relative overflow-y-auto max-w-[100vw] overflow-x-clip"
