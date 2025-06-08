@@ -6,6 +6,7 @@ import Dropzone from "react-dropzone";
 import { useRouter } from "next/navigation";
 import Alert from "@mui/material/Alert";
 import {
+	CircularProgress,
 	FormControl,
 	InputLabel,
 	MenuItem,
@@ -162,14 +163,19 @@ const FileConverter: React.FC = (
 					{activeStep === steps.length - 1 && (
 						<Fragment>
 							<div className="items-center justify-center h-full w-full flex flex-col">
-								<div className="w-1/2 h-1/4 flex flex-col rounded-lg border-2  items-center justify-center">
-									<p>
-										{file?.name
-											? `${file.name.substring(0, file.name.lastIndexOf("."))}.${selectedConversion}`
-											: ""}
-									</p>
+								{!downloadFile && (
+									<div className="w-1/2 h-1/4 flex flex-col rounded-lg  items-center justify-center p-10">
+										<CircularProgress color="success" className="w-12 h-12" />
+									</div>
+								)}
+								{downloadFile && (
+									<div className="w-1/2 h-1/4 flex flex-col rounded-lg border-2  items-center justify-center">
+										<p>
+											{file?.name
+												? `${file.name.substring(0, file.name.lastIndexOf("."))}.${selectedConversion}`
+												: ""}
+										</p>
 
-									{downloadFile && (
 										<a
 											href={URL.createObjectURL(downloadFile)}
 											download={`${file?.name.substring(0, file?.name.lastIndexOf("."))}.${selectedConversion}`}
@@ -177,8 +183,8 @@ const FileConverter: React.FC = (
 											Download
 											<Download className="pl-2 w-1/2" />
 										</a>
-									)}
-								</div>
+									</div>
+								)}
 							</div>
 						</Fragment>
 					)}

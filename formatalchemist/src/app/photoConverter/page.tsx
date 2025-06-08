@@ -7,6 +7,9 @@ const PhotoConverter: React.FC = () => {
 		webp: ["jpg", "png"],
 		jpg: ["webp", "png"],
 		png: ["webp", "jpg"],
+		jpeg: ["webp", "png"],
+		heic: ["png", "webp"],
+		heif: ["png", "webp"],
 	};
 	return FileConverter(supportedConversions);
 };
